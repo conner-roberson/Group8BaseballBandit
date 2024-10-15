@@ -1,0 +1,36 @@
+﻿@model BaseballBandit.Models.User
+@{
+    var errorMessage = TempData["errorMessage"]?.ToString();
+}
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Failed </strong>@errorMessage
+    </div>
+    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+}
+<form asp-action="Login" asp-controller="User" method="post">
+    <div class="mb-3">
+        <label class="form-label">
+            User Name:
+        </label>
+        <input type="text" class="form-control" asp-for="UserName" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Password:
+        </label>
+        <input type="password" class="form-control" asp-for="HashedPass" />
+        <span asp-validation-for="HashedPass" class="text-danger"></span>
+    </div>
+    <div class="d-grid">
+        <button type="submit" class="btn btn-primary">Login</button>
+    </div>
+    <a asp-action="Register" asp-controller="User">Register</a>
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

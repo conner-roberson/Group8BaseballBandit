@@ -1,0 +1,97 @@
+﻿@model BaseballBandit.Models.User
+@{
+    var errorMessage = TempData["errorMessage"]?.ToString();
+}
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Failed </strong>@errorMessage
+    </div>
+    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+}
+<form asp-action="Register" asp-controller="User" method="post">
+    <div class="mb-3">
+        <label class="form-label">
+            UserName:
+        </label>
+        <input type="text" class="form-control" asp-for="UserName" />
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Password:
+        </label>
+        <input type="password" class="form-control" asp-for="HashedPass" />
+        <span asp-validation-for="HashedPass" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            First Name:
+        </label>
+        <input type="text" class="form-control" asp-for="FirstName" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Last Name:
+        </label>
+        <input type="text" class="form-control" asp-for="LastName" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Email: 
+        </label>
+        <input type="text" class="form-control" asp-for="Email" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Address Street: 
+        </label>
+        <input type="text" class="form-control" asp-for="Address" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Address City: 
+        </label>
+        <input type="text" class="form-control" asp-for="AddressCity" />
+        <span asp-validation-for="AddressCity" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Address State:
+        </label>
+        <input type="text" class="form-control" asp-for="AddressState" />
+        <span asp-validation-for="AddressState" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Zip Code:
+        </label>
+        <input type="text" class="form-control" asp-for="AddressZip" />
+        <span asp-validation-for="AddressZip" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Admin
+        </label>
+        @Html.CheckBoxFor(x => x.Admin)
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Seller
+        </label>
+        @Html.CheckBoxFor(x => x.Seller)
+    </div> 
+    <div class="d-grid">
+        <button type="submit" class="btn btn-primary">Register</button>
+    </div>
+    <a asp-action="Login" asp-controller="User">Login</a>
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

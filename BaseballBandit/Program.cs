@@ -1,7 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using BaseballBandit.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddDbContext<BaseballBanditContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"), ProviderOptions => ProviderOptions.EnableRetryOnFailure());
+});
 
 var app = builder.Build();
 
@@ -22,6 +30,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=User}/{action=Login}/{id?}");
 
 app.Run();
