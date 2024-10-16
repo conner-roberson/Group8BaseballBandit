@@ -1,5 +1,6 @@
 using BaseballBandit.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace BaseballBandit.Controllers
@@ -13,10 +14,13 @@ namespace BaseballBandit.Controllers
         {
             _context = context;
         }
-
         public IActionResult Index()
         {
-            return View();
+            string sql = "Select * from Inventory";
+            var inventory = _context.Inventories.FromSqlRaw(sql).ToList();
+
+
+            return View(inventory);
         }
 
         public IActionResult Privacy()
