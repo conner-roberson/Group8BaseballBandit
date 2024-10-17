@@ -1,0 +1,49 @@
+﻿@model List<BaseballBandit.Models.Inventory>
+@{
+}
+<div class="container text-center">
+    <div class="row">
+        <div class="col">
+            <img src="/images/@Model[0].ImagePath" width="300" height="400">
+        </div>
+        <div class="col">
+            <div>
+                <h1>@Model[0].Brand - @Model[0].Name</h1>
+            </div>
+            <br />
+            <div>
+                Number In Stock: @Model[0].NumInStock
+            </div>
+            <br />
+            <div>
+               Length: @Model[0].ProductEquipmentSize in. 
+            </div>
+            <br />
+            @if(Model[0].ProductType == "Adult Bats" || Model[0].ProductType == "Youth Bats")
+            {
+                <div>
+                    Weight: @(Model[0].ProductEquipmentSize - 3) oz
+                </div>
+                <br />
+            }
+            @if(Model[0].ProductApparelSize != null)
+            {
+                <div>
+                    @Model[0].ProductApparelSize
+                </div>
+                <br />
+            }
+            <div>
+                Product Category: @Model[0].ProductType
+            </div>
+            <br />
+            <div>
+                Color: @Model[0].ProductColor
+            </div>
+            <br />
+            <div>
+                $@Model[0].ProductPrice
+            </div>
+        </div>
+    </div>
+</div>

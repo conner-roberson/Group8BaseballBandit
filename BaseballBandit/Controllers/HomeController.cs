@@ -19,8 +19,15 @@ namespace BaseballBandit.Controllers
             string sql = "Select * from Inventory";
             var inventory = _context.Inventories.FromSqlRaw(sql).ToList();
 
-
             return View(inventory);
+        }
+
+        public IActionResult ProductPage(int ProductId)
+        {
+            string sql = $"Select * from Inventory WHERE ProductID = {ProductId}";
+            var ProductDetails = _context.Inventories.FromSqlRaw(sql).ToList();
+
+            return View(ProductDetails);
         }
 
         public IActionResult Privacy()

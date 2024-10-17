@@ -6,14 +6,24 @@
 <div class="text-center">
     <h1 class="display-4">Welcome To Baseball Bandits</h1>
 </div>
-
+<hr />
+<br />
 <div class="container text-center">
     @for(int i = 0; i < Model.Count(); i+=2)
     {
         <div class="row">
             <div class="col">
-                @Model[i].Brand @Model[i].Name
-                <img src="/images/@Model[i].ImagePath" width="200" height="200">
+                <div>
+                    <a href="@Url.Action("ProductPage", "Home", new{ ProductId = Model[i].ProductId})"><img src="/images/@Model[i].ImagePath" width="200" height="200"></a>
+                </div>
+                <br />
+                <div>
+                    <b>@Model[i].Brand @Model[i].Name</b>
+                    <br />
+                    @Model[i].ProductPrice
+                </div>
+                <br />
+                <br />
             </div>
             @if(i+1 >= Model.Count())
             {
@@ -26,12 +36,20 @@
             else
             {
                 <div class="col">
-                    @Model[i + 1].Brand @Model[i + 1].Name
-                    <img src="/images/@Model[i+1].ImagePath" width="200" height="200">
+                    <div>
+                        <a href="@Url.Action("ProductPage", "Home", new{ ProductId = Model[i+1].ProductId})"><img src="/images/@Model[i+1].ImagePath" width="200" height="200"></a>
+                    </div>
+                    <br />
+                    <div>
+                        <b>@Model[i + 1].Brand @Model[i + 1].Name</b>
+                        <br />
+                        @Model[i + 1].ProductPrice
+                    </div>
+                    <br />
+                    <br />
                 </div>
             }
         </div>
-        }
     }
 </div>
 
