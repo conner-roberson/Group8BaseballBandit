@@ -23,8 +23,8 @@ namespace BaseballBandit.Controllers
         [HttpPost]
         public IActionResult Login([Bind] Models.User user)
         {
-            Classes.User user1 = new(_context);
-            bool loginSuccess = user1.Login(user.UserName, user.HashedPass);
+            //Classes.User user1 = new(_context);
+            bool loginSuccess = Classes.User.Login(user.UserName, user.HashedPass, _context);
             if(loginSuccess)
             {
                 return RedirectToAction("Index", "Home");
@@ -45,21 +45,21 @@ namespace BaseballBandit.Controllers
         [HttpPost]
         public IActionResult Register([Bind] Models.User user)
         {
-            Classes.User NewUser = new(_context)
-            {
-                UserName = user.UserName,
-                Password = user.HashedPass,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-                Address = user.Address,
-                AddressCity = user.AddressCity,
-                AddressState = user.AddressState,
-                AddressZip = user.AddressZip,
-                Admin = user.Admin,
-                Seller = user.Seller,
-            };
-            bool registered = NewUser.Register(NewUser);
+            //Classes.User NewUser = new(_context)
+            //{
+            //    UserName = user.UserName,
+            //    Password = user.HashedPass,
+            //    FirstName = user.FirstName,
+            //    LastName = user.LastName,
+            //    Email = user.Email,
+            //    Address = user.Address,
+            //    AddressCity = user.AddressCity,
+            //    AddressState = user.AddressState,
+            //    AddressZip = user.AddressZip,
+            //    Admin = user.Admin,
+            //    Seller = user.Seller,
+            //};
+            bool registered = Classes.User.Register(user, _context);
 
             if (registered)
             {

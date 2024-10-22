@@ -5,93 +5,79 @@ using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System.Runtime.Intrinsics.Arm;
 using System.Data;
+using BaseballBandit.Classes;
 
 namespace BaseballBandit.Classes
 {
-    public class User
+    public static class User
     {
-        private readonly BaseballBanditContext _context;
+        public static string? UserName;
 
-        public User(BaseballBanditContext context)
-        {
-            _context = context;
-        }
+        public static int? UserID;
 
-        public string? UserName;
+        public static string? Email;
 
-        public int? UserID;
+        public static string? FirstName;
 
-        public string? Password;
+        public static string? LastName;
 
-        public string? Email;
+        public static bool? Admin;
 
-        public string? FirstName;
+        public static bool? Seller;
 
-        public string? LastName;
+        public static string? Address;
 
-        public bool? Admin;
+        public static string? AddressCity;
 
-        public bool? Seller;
+        public static string? AddressState;
 
-        public string? Address;
+        public static int AddressZip;
 
-        public string? AddressCity;
-
-        public string? AddressState;
-
-        public int AddressZip;
-
-        public bool Login(string UserID, string Password)
+        public static bool Login(string UserID, string Password, BaseballBanditContext context)
         {
             string sql = $"Exec LoginUser {UserID}";
-            var check = _context.Users.FromSqlRaw(sql).ToList();
-            if(check.Count == 0)
+            var check = context.Users.FromSqlRaw(sql).ToList();
+
+            string realPass = check[0].HashedPass;
+
+            bool CheckPass = BCrypt.Net.BCrypt.EnhancedVerify(Password, realPass);
+
+            if (check.Count == 0 || CheckPass == false)
             {
                 return false;
             }
             else
             {
-                string realPass = check[0].HashedPass;
+                User.UserID = check[0].UserId;
+                UserName = check[0].UserName;
+                Email = check[0].Email;
+                FirstName = check[0].FirstName;
+                LastName = check[0].LastName;
+                Admin = check[0].Admin;
+                Seller = check[0].Seller;
+                Address = check[0].Address;
+                AddressCity = check[0].AddressCity;
+                AddressState = check[0].AddressState;
+                AddressZip = check[0].AddressZip;
 
-                bool CheckPass = BCrypt.Net.BCrypt.EnhancedVerify(Password, realPass);
+                CartClass.InitializeCart(check[0].UserId, context);
 
-                if (CheckPass)
-                {
-                    User currentUser = new User(_context)
-                    {
-                        UserID = check[0].UserId,
-                        UserName = check[0].UserName,
-                        Password = check[0].HashedPass,
-                        Email = check[0].Email,
-                        FirstName = check[0].FirstName,
-                        LastName = check[0].LastName,
-                        Admin = check[0].Admin,
-                        Seller = check[0].Seller,
-                        Address = check[0].Address,
-                        AddressCity = check[0].AddressCity,
-                        AddressState = check[0].AddressState,
-                        AddressZip = check[0].AddressZip,
-                    };
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
+                return true;
+                
             }
         }
 
-        public string HashPassword(string Password) 
+        public static string HashPassword(string Password) 
         {
             string passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(Password, 13);
             return passwordHash;
         }
 
-        public bool Register(User user)
+        public static bool Register(Models.User user, BaseballBanditContext context)
         {
             try
             {
-                string hashedPass = HashPassword(user.Password);
+                string hashedPass = HashPassword(user.HashedPass);
                 SqlConnection con = new SqlConnection("server=(localdb)\\localDB;database=BaseballBandit;Integrated Security=True; ConnectRetryCount=0; Encrypt=True; TrustServerCertificate=True");
                 SqlCommand cmd = new SqlCommand("RegisterUser", con);
                 cmd.CommandType = CommandType.StoredProcedure;

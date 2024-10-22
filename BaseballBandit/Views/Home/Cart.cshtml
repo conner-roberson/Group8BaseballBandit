@@ -1,0 +1,65 @@
+﻿@model List<BaseballBandit.Models.Inventory>
+@using BaseballBandit.Classes
+@{
+    ViewData["Title"] = "Cart Page";
+    var errorMessage = TempData["errorMessage"]?.ToString();
+    var successMessage = TempData["successMessage"]?.ToString();
+}
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Failed </strong>@errorMessage
+    </div>
+    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+}
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <div class="alert alert-success">
+        <strong>Success </strong>@successMessage
+    </div>
+    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+}
+<h1>
+    Cart Page
+</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Product
+            </th>
+            <th>
+                Brand
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Unit Price
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Brand
+                </td>
+                <td>
+                    @item.ProductType
+                </td>
+                <td>
+                    @item.ProductPrice
+                </td>
+                <td>
+                    <a class="btn btn-danger" href="@Url.Action("RemoveFromCart", "Home", new {ProductId = item.ProductId})">Remove</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h1>Subtotal: @CartClass.SubTotal</h1>

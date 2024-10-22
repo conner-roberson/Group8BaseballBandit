@@ -1,8 +1,23 @@
 ﻿@model List<BaseballBandit.Models.Inventory>
 @{
     ViewData["Title"] = "Home Page";
+    var errorMessage = TempData["errorMessage"]?.ToString();
+    var successMessage = TempData["successMessage"]?.ToString();
 }
-
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Failed </strong>@errorMessage
+    </div>
+    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+}
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <div class="alert alert-success">
+        <strong>Success </strong>@successMessage
+    </div>
+    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+}
 <div class="text-center">
     <h1 class="display-4">Welcome To Baseball Bandits</h1>
 </div>

@@ -2,6 +2,7 @@ using BaseballBandit.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using BaseballBandit.Classes;
 
 namespace BaseballBandit.Controllers
 {
@@ -28,6 +29,58 @@ namespace BaseballBandit.Controllers
             var ProductDetails = _context.Inventories.FromSqlRaw(sql).ToList();
 
             return View(ProductDetails);
+        }
+
+        public IActionResult AddToCart(int ProductId)
+        {
+            bool success = CartClass.AddToCart(ProductId, _context);
+            if (success)
+            {
+                TempData["successMessage"] = "Add To Cart Successful";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["errorMessage"] = "Add To Cart Failed";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public IActionResult Cart()
+        {
+            
+            string sql = $"Select * From Inventory";
+            var products = _context.Inventories.FromSqlRaw(sql).ToList();
+
+            List<Inventory> cart = new List<Inventory>();
+
+            int j = 0;
+            for (int i = 0; i < products.Count && j < CartClass.productIds.Count; i++)
+            {
+                if (products[i].ProductId == CartClass.productIds[j].Value)
+                {
+                    cart.Add(products[i]);
+                    j++; 
+                }
+            }
+
+
+            return View(cart);
+        }
+
+        public IActionResult RemoveFromCart(int ProductId)
+        {
+            bool success = CartClass.RemoveFromCart(ProductId, _context);
+            if (success)
+            {
+                TempData["successMessage"] = "Remove From Cart Successful";
+                return RedirectToAction("Cart", "Home");
+            }
+            else
+            {
+                TempData["errorMessage"] = "Add To Cart Failed";
+                return RedirectToAction("Cart", "Home");
+            }
         }
 
         public IActionResult Privacy()

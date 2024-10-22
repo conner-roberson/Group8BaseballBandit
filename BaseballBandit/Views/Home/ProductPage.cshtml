@@ -44,6 +44,10 @@
             <div>
                 $@Model[0].ProductPrice
             </div>
+            <br />
+            <div>
+                <a class="btn btn-primary" href="@Url.Action("AddToCart", "Home", new {ProductId = Model[0].ProductId})">Add To Cart</a>
+            </div>
         </div>
     </div>
 </div>
