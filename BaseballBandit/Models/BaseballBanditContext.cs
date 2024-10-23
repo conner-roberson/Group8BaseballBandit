@@ -34,7 +34,7 @@ public partial class BaseballBanditContext : DbContext
                 .HasNoKey()
                 .ToTable("Cart");
 
-            entity.Property(e => e.FkUserId).HasColumnName("FkUserID");
+            entity.Property(e => e.FkUserId).HasColumnName("FkUserId");
         });
 
         modelBuilder.Entity<Inventory>(entity =>

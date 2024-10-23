@@ -13,7 +13,7 @@ namespace BaseballBandit.Classes
     {
         public static string? UserName;
 
-        public static int? UserID;
+        public static int UserID;
 
         public static string? Email;
 

@@ -19,47 +19,54 @@
     </div>
     <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
 }
-<h1>
-    Cart Page
-</h1>
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>
-                Product
-            </th>
-            <th>
-                Brand
-            </th>
-            <th>
-                Quantity
-            </th>
-            <th>
-                Unit Price
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach(var item in Model)
-        {
+@if(Model.Count != 0)
+{
+    <table class="table table-bordered">
+        <thead>
             <tr>
-                <td>
-                    @item.Name
-                </td>
-                <td>
-                    @item.Brand
-                </td>
-                <td>
-                    @item.ProductType
-                </td>
-                <td>
-                    @item.ProductPrice
-                </td>
-                <td>
-                    <a class="btn btn-danger" href="@Url.Action("RemoveFromCart", "Home", new {ProductId = item.ProductId})">Remove</a>
-                </td>
+                <th>
+                    Product
+                </th>
+                <th>
+                    Brand
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Unit Price
+                </th>
             </tr>
-        }
-    </tbody>
-</table>
-<h1>Subtotal: @CartClass.SubTotal</h1>
+        </thead>
+        <tbody>
+            @for(int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @Model[i].Name
+                    </td>
+                    <td>
+                        @Model[i].Brand
+                    </td>
+                    <td>
+                        @CartClass.Quantity[i]
+                    </td>
+                    <td>
+                        @Model[i].ProductPrice
+                    </td>
+                    <td>
+                        <a class="btn btn-danger" href="@Url.Action("RemoveFromCart", "Home", new {ProductId = Model[i].ProductId})">Remove</a>
+                        <a class="btn btn-danger" href="@Url.Action("RemoveAllFromCart", "Home", new {ProductId = Model[i].ProductId})">Remove All</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <h1>Subtotal: @Math.Round(CartClass.SubTotal, 2)</h1>
+    <h4>Number of Items: @CartClass.NumItems</h4>
+}
+else
+{
+    <h3 style="text-align:center">It looks like nothing is in your cart</h3>
+    <h5 style="text-align:center">Add products to your cart through the home page</h5>
+}

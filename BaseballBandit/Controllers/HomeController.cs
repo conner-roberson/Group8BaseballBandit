@@ -48,23 +48,21 @@ namespace BaseballBandit.Controllers
 
         public IActionResult Cart()
         {
-            
             string sql = $"Select * From Inventory";
             var products = _context.Inventories.FromSqlRaw(sql).ToList();
 
             List<Inventory> cart = new List<Inventory>();
-
+            
             int j = 0;
             for (int i = 0; i < products.Count && j < CartClass.productIds.Count; i++)
             {
-                if (products[i].ProductId == CartClass.productIds[j].Value)
+                if (products[i].ProductId == CartClass.productIds[j])
                 {
                     cart.Add(products[i]);
+                    i = -1;
                     j++; 
                 }
             }
-
-
             return View(cart);
         }
 
@@ -78,7 +76,21 @@ namespace BaseballBandit.Controllers
             }
             else
             {
-                TempData["errorMessage"] = "Add To Cart Failed";
+                TempData["errorMessage"] = "Remove From Cart Failed";
+                return RedirectToAction("Cart", "Home");
+            }
+        }
+        public IActionResult RemoveAllFromCart(int ProductId)
+        {
+            bool success = CartClass.RemoveAllFromCart(ProductId, _context);
+            if (success)
+            {
+                TempData["successMessage"] = "Remove From Cart Successful";
+                return RedirectToAction("Cart", "Home");
+            }
+            else
+            {
+                TempData["errorMessage"] = "Remove From Cart Failed";
                 return RedirectToAction("Cart", "Home");
             }
         }
