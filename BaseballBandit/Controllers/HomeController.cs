@@ -17,10 +17,18 @@ namespace BaseballBandit.Controllers
         }
         public IActionResult Index()
         {
-            string sql = "Select * from Inventory";
-            var inventory = _context.Inventories.FromSqlRaw(sql).ToList();
+            if(Classes.User.UserName == null)
+            {
+                TempData["errorMessage"] = "You must login first";
+                return RedirectToAction("Login", "User");
+            }
+            else
+            {
+                string sql = "Select * from Inventory";
+                var inventory = _context.Inventories.FromSqlRaw(sql).ToList();
 
-            return View(inventory);
+                return View(inventory);
+            }
         }
 
         public IActionResult ProductPage(int ProductId)
@@ -48,22 +56,30 @@ namespace BaseballBandit.Controllers
 
         public IActionResult Cart()
         {
-            string sql = $"Select * From Inventory";
-            var products = _context.Inventories.FromSqlRaw(sql).ToList();
-
-            List<Inventory> cart = new List<Inventory>();
-            
-            int j = 0;
-            for (int i = 0; i < products.Count && j < CartClass.productIds.Count; i++)
+            if (Classes.User.UserName == null)
             {
-                if (products[i].ProductId == CartClass.productIds[j])
-                {
-                    cart.Add(products[i]);
-                    i = -1;
-                    j++; 
-                }
+                TempData["errorMessage"] = "You must login first";
+                return RedirectToAction("Login", "User");
             }
-            return View(cart);
+            else
+            {
+                string sql = $"Select * From Inventory";
+                var products = _context.Inventories.FromSqlRaw(sql).ToList();
+
+                List<Inventory> cart = new List<Inventory>();
+
+                int j = 0;
+                for (int i = 0; i < products.Count && j < CartClass.productIds.Count; i++)
+                {
+                    if (products[i].ProductId == CartClass.productIds[j])
+                    {
+                        cart.Add(products[i]);
+                        i = -1;
+                        j++;
+                    }
+                }
+                return View(cart);
+            }
         }
 
         public IActionResult RemoveFromCart(int ProductId)

@@ -9,15 +9,15 @@
 {
     <div class="alert alert-danger">
         <strong>Failed </strong>@errorMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
     </div>
-    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
 }
 @if (!string.IsNullOrWhiteSpace(successMessage))
 {
     <div class="alert alert-success">
         <strong>Success </strong>@successMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
     </div>
-    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
 }
 @if(Model.Count != 0)
 {

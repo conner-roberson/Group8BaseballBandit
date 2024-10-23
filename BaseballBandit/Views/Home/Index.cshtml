@@ -8,15 +8,15 @@
 {
     <div class="alert alert-danger">
         <strong>Failed </strong>@errorMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
     </div>
-    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
 }
 @if (!string.IsNullOrWhiteSpace(successMessage))
 {
     <div class="alert alert-success">
         <strong>Success </strong>@successMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
     </div>
-    <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
 }
 <div class="text-center">
     <h1 class="display-4">Welcome To Baseball Bandits</h1>
@@ -36,6 +36,9 @@
                     <b>@Model[i].Brand @Model[i].Name</b>
                     <br />
                     @Model[i].ProductPrice
+                </div>
+                <div>
+                    <a class="btn btn-sm btn-primary" href="@Url.Action("AddToCart", "Home", new {ProductId = Model[i].ProductId})">Add To Cart</a>
                 </div>
                 <br />
                 <br />
@@ -59,6 +62,9 @@
                         <b>@Model[i + 1].Brand @Model[i + 1].Name</b>
                         <br />
                         @Model[i + 1].ProductPrice
+                    </div>
+                    <div>
+                        <a class="btn btn-sm btn-primary" href="@Url.Action("AddToCart", "Home", new {ProductId = Model[i + 1].ProductId})">Add To Cart</a>
                     </div>
                     <br />
                     <br />
