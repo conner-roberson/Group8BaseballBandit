@@ -61,6 +61,7 @@ namespace BaseballBandit.Classes
                 AddressZip = check[0].AddressZip;
 
                 CartClass.InitializeCart(check[0].UserId, context);
+                Order.InitializeOrderLog(context);
 
                 return true;
                 

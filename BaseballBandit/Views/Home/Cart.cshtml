@@ -64,6 +64,7 @@
     </table>
     <h1>Subtotal: @Math.Round(CartClass.SubTotal, 2)</h1>
     <h4>Number of Items: @CartClass.NumItems</h4>
+    <a class="btn btn-primary" href="@Url.Action("FinalizeOrder", "Home", new {SubTotal = Math.Round(CartClass.SubTotal,2)})">Place Order</a>
 }
 else
 {

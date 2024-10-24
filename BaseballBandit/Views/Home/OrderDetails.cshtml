@@ -1,0 +1,48 @@
+﻿@model List<BaseballBandit.Models.OrderedProductsDetails>
+@using BaseballBandit.Classes
+@{
+}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Product Image 
+            </th>
+            <th>
+                Brand
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Unit Price
+            </th>
+            <th>
+                Number Purchased
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <img src="/images/@item.ImagePath" width="100" height="100" />
+                </td>
+                <td>
+                    @item.Brand
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.ProductPrice
+                </td>
+                <td>
+                    @item.Quantity
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h3>Total Price: @Order.Total[ViewBag.Index]</h3>

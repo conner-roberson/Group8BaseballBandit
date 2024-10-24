@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using BaseballBandit.Classes;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace BaseballBandit.Controllers
 {
@@ -111,6 +112,62 @@ namespace BaseballBandit.Controllers
             }
         }
 
+        public IActionResult FinalizeOrder(double SubTotal)
+        {
+            bool success = Order.FinalizeOrder(SubTotal, _context);
+            if (success)
+            {
+                TempData["successMessage"] = "Order Placed Successfully";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["errorMessage"] = "Order Failed To Be Placed";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        public IActionResult OrderScreen()
+        {
+            if (Classes.User.UserName == null)
+            {
+                TempData["errorMessage"] = "You must login first";
+                return RedirectToAction("Login", "User");
+            }
+            else
+            {
+                return View();
+            }
+        }
+        public IActionResult RefundOrder(int OrderNum)
+        {
+            bool success = Order.RefundOrder(OrderNum, _context);
+            if (success)
+            {
+                TempData["successMessage"] = "Refund Successful";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["errorMessage"] = "Refund Failed";
+                return RedirectToAction("Index", "Home");
+            }
+        }
+        public IActionResult OrderDetails(int OrderNum)
+        {
+            string sql = $"Exec OrderedProductsDetails {OrderNum}";
+            var orderedProducts = _context.details.FromSqlRaw(sql).ToList();
+
+            for(int i = 0; i < Order.OrderNum.Count; i++)
+            {
+                if (Order.OrderNum[i] == OrderNum)
+                {
+                    ViewBag.Index = i;
+                }
+            }
+
+            return View(orderedProducts);
+        }
         public IActionResult Privacy()
         {
             return View();

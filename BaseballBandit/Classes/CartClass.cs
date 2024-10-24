@@ -235,5 +235,37 @@ namespace BaseballBandit.Classes
                 return false;
             }
         }
+
+        public static bool ClearCart(BaseballBanditContext context)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection("server=(localdb)\\localDB;database=BaseballBandit;Integrated Security=True; ConnectRetryCount=0; Encrypt=True; TrustServerCertificate=True"))
+                {
+                    string updateQuery = @"
+                        DELETE FROM Cart WHERE FkUserId=@FkUserId";
+
+                    using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@FkUserId", FkUserId);
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                SubTotal = 0;
+                NumItems = 0;
+                productIds.Clear();
+                Quantity.Clear();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+        }
     }
 }

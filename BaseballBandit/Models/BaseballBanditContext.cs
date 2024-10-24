@@ -23,6 +23,10 @@ public partial class BaseballBanditContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+    public virtual DbSet<OrderedProducts> OrderedProducts { get; set; }
+
+    public virtual DbSet<OrderedProductsDetails> details { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
 
@@ -36,7 +40,10 @@ public partial class BaseballBanditContext : DbContext
 
             entity.Property(e => e.FkUserId).HasColumnName("FkUserId");
         });
-
+        modelBuilder.Entity<OrderedProductsDetails>(entity =>
+        {
+            entity.HasNoKey();
+        });
         modelBuilder.Entity<Inventory>(entity =>
         {
             entity
@@ -75,6 +82,12 @@ public partial class BaseballBanditContext : DbContext
                 .ValueGeneratedOnAdd()
                 .HasColumnName("UserID");
             entity.Property(e => e.UserName).HasMaxLength(50);
+        });
+        modelBuilder.Entity<OrderedProducts>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToTable("OrderedProducts");
         });
 
         OnModelCreatingPartial(modelBuilder);

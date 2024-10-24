@@ -1,0 +1,58 @@
+﻿@using BaseballBandit.Classes
+@{
+}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Order Number
+            </th>
+            <th>
+                Shipping Address
+            </th>
+            <th>
+                Total Price
+            </th>
+            <th>
+                Order Date
+            </th>
+            <th>
+                Refunded
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Order.OrderNum.Count; i++)
+        {
+            <tr>
+                <td>
+                    @Order.OrderNum[i]
+                </td>
+                <td>
+                    @Order.shippingAddress[i]
+                </td>
+                <td>
+                    @Order.Total[i]
+                </td>
+                <td>
+                    @Order.OrderDate[i]
+                </td>
+                @if(Order.Refunded[i] == true)
+                {
+                    <td>Yes</td>
+                }
+                else
+                {
+                    <td>No</td>
+                }
+                <td>
+                    <a class="btn btn-danger btn-sm" href="@Url.Action("RefundOrder", "Home", new {OrderNum = Order.OrderNum[i]})">Refund</a>
+                    <a class="btn btn-primary btn-sm" href="@Url.Action("OrderDetails", "Home", new {OrderNum = Order.OrderNum[i]})">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
