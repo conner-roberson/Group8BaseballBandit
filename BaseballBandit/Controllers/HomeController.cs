@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using BaseballBandit.Classes;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BaseballBandit.Controllers
 {
@@ -16,12 +17,36 @@ namespace BaseballBandit.Controllers
         {
             _context = context;
         }
+        [HttpGet]
         public IActionResult Index()
         {
             if(Classes.User.UserName == null)
             {
                 TempData["errorMessage"] = "You must login first";
                 return RedirectToAction("Login", "User");
+            }
+            else
+            {
+                string sql = "Select * from Inventory";
+                var inventory = _context.Inventories.FromSqlRaw(sql).ToList();
+
+                return View(inventory);
+            }
+        }
+        [HttpPost]
+        public IActionResult Index(string? searchString)
+        {
+            if (Classes.User.UserName == null)
+            {
+                TempData["errorMessage"] = "You must login first";
+                return RedirectToAction("Login", "User");
+            }
+            else if (!searchString.IsNullOrEmpty())
+            {
+                string sql = $"Select * from Inventory WHERE Name LIKE '{searchString}%' OR Brand LIKE '{searchString}%'";
+                var searchedProducts = _context.Inventories.FromSqlRaw(sql).ToList();
+
+                return View(searchedProducts);
             }
             else
             {

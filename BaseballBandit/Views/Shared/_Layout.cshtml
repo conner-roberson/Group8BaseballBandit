@@ -28,6 +28,18 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="OrderScreen">Orders</a>
                         </li>
+                        <li class="nav-item">
+                            <form asp-action="Index" asp-controller="Home" method="post">
+                                <div class="input-group">
+                                    <div class="form-outline">
+                                        <input type="text" class="form-control" name="searchString" placeholder="Search" />
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">
+                                        Search
+                                    </button>
+                                </div>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>
