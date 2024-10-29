@@ -67,13 +67,11 @@ namespace BaseballBandit.Classes
                 
             }
         }
-
         public static string HashPassword(string Password) 
         {
             string passwordHash = BCrypt.Net.BCrypt.EnhancedHashPassword(Password, 13);
             return passwordHash;
         }
-
         public static bool Register(Models.User user, BaseballBanditContext context)
         {
             try
@@ -104,6 +102,87 @@ namespace BaseballBandit.Classes
                 return false;
             }
             
+        }
+        public static bool DeleteUser(int userId, BaseballBanditContext context)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection("server=(localdb)\\localDB;database=BaseballBandit;Integrated Security=True; ConnectRetryCount=0; Encrypt=True; TrustServerCertificate=True"))
+                {
+                    string updateQuery = @"
+                        DELETE FROM UserData WHERE UserID=@userId";
+
+                    using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@userId", userId);
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+        }
+        public static bool DeleteSeller(int userId, BaseballBanditContext context)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection("server=(localdb)\\localDB;database=BaseballBandit;Integrated Security=True; ConnectRetryCount=0; Encrypt=True; TrustServerCertificate=True"))
+                {
+                    string updateQuery = @"
+                        DELETE FROM Inventory WHERE SellerId=@userId";
+
+                    using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@userId", userId);
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
+        }
+        public static bool DeleteProduct(int productId, BaseballBanditContext context)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection("server=(localdb)\\localDB;database=BaseballBandit;Integrated Security=True; ConnectRetryCount=0; Encrypt=True; TrustServerCertificate=True"))
+                {
+                    string updateQuery = @"
+                        DELETE FROM Inventory WHERE ProductID=@productId";
+
+                    using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@productId", productId);
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return false;
+            }
         }
     }
 }

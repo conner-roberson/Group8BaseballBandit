@@ -1,0 +1,77 @@
+﻿@model BaseballBandit.Models.Inventory
+@{
+    var errorMessage = TempData["errorMessage"]?.ToString();
+}
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Failed </strong>@errorMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+}
+<form asp-action="EditProduct" asp-controller="Admin" method="post">
+    <div class="mb-3">
+        <label class="form-label">
+            Brand: 
+        </label>
+        <input type="text" class="form-control" asp-for="Brand" value="@ViewBag.Brand" />
+        <span asp-validation-for="Brand" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Name: 
+        </label>
+        <input type="text" class="form-control" asp-for="Name" value="@ViewBag.Name" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Product Price: 
+        </label>
+        <input type="text" class="form-control" asp-for="ProductPrice" value="@ViewBag.ProductPrice"/>
+        <span asp-validation-for="ProductPrice" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Product Type: 
+        </label>
+        <input type="text" class="form-control" asp-for="ProductType" value="@ViewBag.ProductType"/>
+        <span asp-validation-for="ProductType" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Product Color: 
+        </label>
+        <input type="text" class="form-control" asp-for="ProductColor" value="@ViewBag.ProductColor"/>
+        <span asp-validation-for="ProductColor" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Product Equipment Size: 
+        </label>
+        <input type="text" class="form-control" asp-for="ProductEquipmentSize" value="@ViewBag.ProductEquipmentSize"/>
+        <span asp-validation-for="ProductEquipmentSize" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Product Apparel Size: 
+        </label>
+        <input type="text" class="form-control" asp-for="ProductApparelSize" value="@ViewBag.ProductApparelSize"/>
+        <span asp-validation-for="ProductApparelSize" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Seller ID:
+        </label>
+        <input type="text" class="form-control" asp-for="SellerId" value="@ViewBag.SellerId"/>
+        <span asp-validation-for="SellerId" class="text-danger"></span>
+    </div>
+    <div class="d-grid">
+        <button type="submit" class="btn btn-primary">Update</button>
+    </div>
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

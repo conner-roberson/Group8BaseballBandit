@@ -235,7 +235,6 @@ namespace BaseballBandit.Classes
                 return false;
             }
         }
-
         public static bool ClearCart(BaseballBanditContext context)
         {
             try

@@ -45,20 +45,7 @@ namespace BaseballBandit.Controllers
         [HttpPost]
         public IActionResult Register([Bind] Models.User user)
         {
-            //Classes.User NewUser = new(_context)
-            //{
-            //    UserName = user.UserName,
-            //    Password = user.HashedPass,
-            //    FirstName = user.FirstName,
-            //    LastName = user.LastName,
-            //    Email = user.Email,
-            //    Address = user.Address,
-            //    AddressCity = user.AddressCity,
-            //    AddressState = user.AddressState,
-            //    AddressZip = user.AddressZip,
-            //    Admin = user.Admin,
-            //    Seller = user.Seller,
-            //};
+            
             bool registered = Classes.User.Register(user, _context);
 
             if (registered)

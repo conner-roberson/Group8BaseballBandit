@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿@using BaseballBandit.Classes
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -20,26 +20,43 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Cart">Cart</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="OrderScreen">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <form asp-action="Index" asp-controller="Home" method="post">
-                                <div class="input-group">
-                                    <div class="form-outline">
-                                        <input type="text" class="form-control" name="searchString" placeholder="Search" />
+                        @if(BaseballBandit.Classes.User.Admin != true && BaseballBandit.Classes.User.Seller != true)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Cart">Cart</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="OrderScreen">Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-action="Index" asp-controller="Home" method="post">
+                                    <div class="input-group">
+                                        <div class="form-outline">
+                                            <input type="text" class="form-control" name="searchString" placeholder="Search" />
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">
+                                            Search
+                                        </button>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">
-                                        Search
-                                    </button>
-                                </div>
-                            </form>
-                        </li>
+                                </form>
+                            </li>
+                        }
+                        @if(BaseballBandit.Classes.User.Admin == true)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Admin
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+                                    <li><a class="dropdown-item" href="@Url.Action("Buyers", "Admin")">Buyers</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Sellers", "Admin")">Sellers</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Products", "Admin")">Products</a></li>
+                                    <li><a class="dropdown-item" href="@Url.Action("Orders", "Admin")">Orders</a></li>
+                                </ul>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>

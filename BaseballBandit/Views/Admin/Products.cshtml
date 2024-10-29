@@ -1,0 +1,67 @@
+﻿@model List<BaseballBandit.Models.Inventory>
+@{
+    ViewData["Title"] = "Home Page";
+    var errorMessage = TempData["errorMessage"]?.ToString();
+    var successMessage = TempData["successMessage"]?.ToString();
+}
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Failed </strong>@errorMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <div class="alert alert-success">
+        <strong>Success </strong>@successMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+}
+<h2>Admin View</h2>
+
+<table class="table table-bordered" style="text-align:center">
+    <thead>
+        <tr>
+            <th>
+                Brand
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Brand
+                </td>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.ProductType
+                </td>
+                <td>
+                    @item.ProductPrice
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-danger" href="@Url.Action("DeleteProduct", "Admin", new {productId = item.ProductId})">Delete</a>
+                    <a class="btn btn-sm btn-primary" href="@Url.Action("EditProduct", "Admin", new {productId = item.ProductId})">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

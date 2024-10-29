@@ -27,7 +27,7 @@ namespace BaseballBandit.Controllers
             }
             else
             {
-                string sql = "Select * from Inventory";
+                string sql = "Select * from Inventory Order By ProductID";
                 var inventory = _context.Inventories.FromSqlRaw(sql).ToList();
 
                 return View(inventory);
@@ -50,13 +50,12 @@ namespace BaseballBandit.Controllers
             }
             else
             {
-                string sql = "Select * from Inventory";
+                string sql = "Select * from Inventory Order By ProductID";
                 var inventory = _context.Inventories.FromSqlRaw(sql).ToList();
 
                 return View(inventory);
             }
         }
-
         public IActionResult ProductPage(int ProductId)
         {
             string sql = $"Select * from Inventory WHERE ProductID = {ProductId}";
@@ -64,7 +63,6 @@ namespace BaseballBandit.Controllers
 
             return View(ProductDetails);
         }
-
         public IActionResult AddToCart(int ProductId)
         {
             bool success = CartClass.AddToCart(ProductId, _context);
@@ -79,7 +77,6 @@ namespace BaseballBandit.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-
         public IActionResult Cart()
         {
             if (Classes.User.UserName == null)
@@ -107,7 +104,6 @@ namespace BaseballBandit.Controllers
                 return View(cart);
             }
         }
-
         public IActionResult RemoveFromCart(int ProductId)
         {
             bool success = CartClass.RemoveFromCart(ProductId, _context);
@@ -136,7 +132,6 @@ namespace BaseballBandit.Controllers
                 return RedirectToAction("Cart", "Home");
             }
         }
-
         public IActionResult FinalizeOrder(double SubTotal)
         {
             bool success = Order.FinalizeOrder(SubTotal, _context);
@@ -151,7 +146,6 @@ namespace BaseballBandit.Controllers
                 return RedirectToAction("Index", "Home");
             }
         }
-
         public IActionResult OrderScreen()
         {
             if (Classes.User.UserName == null)
