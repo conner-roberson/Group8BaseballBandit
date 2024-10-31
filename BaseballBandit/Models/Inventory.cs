@@ -5,7 +5,7 @@ namespace BaseballBandit.Models;
 
 public partial class Inventory
 {
-    public int ProductId { get; set; }
+    public int? ProductId { get; set; }
 
     public double ProductPrice { get; set; }
 
@@ -23,5 +23,5 @@ public partial class Inventory
 
     public string? Brand { get; set; }
 
-    public int SellerId { get; set; }
+    public int? SellerId { get; set; }
 }

@@ -1,7 +1,9 @@
 ﻿using BaseballBandit.Classes;
 using BaseballBandit.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace BaseballBandit.Controllers
 {
@@ -101,15 +103,40 @@ namespace BaseballBandit.Controllers
         [HttpPost]
         public IActionResult EditProduct([Bind] Inventory product)
         {
-            bool success = Product.EditProduct(product, _context);
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    SqlConnection con = new SqlConnection("server=(localdb)\\localDB;database=BaseballBandit;Integrated Security=True; ConnectRetryCount=0; Encrypt=True; TrustServerCertificate=True");
+                    SqlCommand cmd = new SqlCommand("EditProduct", con);
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@ProductPrice", product.ProductPrice);
+                    cmd.Parameters.AddWithValue("@ProductType", product.ProductType);
+                    cmd.Parameters.AddWithValue("@ProductColor", product.ProductColor);
+                    cmd.Parameters.AddWithValue("@ProductEquipmentSize", product.ProductEquipmentSize);
+                    cmd.Parameters.AddWithValue("@ProductApparelSize", product.ProductApparelSize ?? "");
+                    cmd.Parameters.AddWithValue("@ImagePath", product.ImagePath ?? "");
+                    cmd.Parameters.AddWithValue("@Brand", product.Brand);
+                    cmd.Parameters.AddWithValue("@Name", product.Name);
+                    cmd.Parameters.AddWithValue("@SellerId", product.SellerId);
+                    cmd.Parameters.AddWithValue("@ProductID", product.ProductId);
+                    con.Open();
+                    cmd.ExecuteNonQuery();
+                    con.Close();
 
-            if (success)
-            {
-                return RedirectToAction("Login", "User");
+                    TempData["successMessage"] = "Edit Successful";
+                    return RedirectToAction("AllProducts", "Seller");
+                }
+                else
+                {
+                    TempData["errorMessage"] = "Edit Could Not Be Processed";
+                    return View(new { product.ProductId });
+                }
             }
-            else
+            catch (Exception ex)
             {
-                return View();
+                TempData["errorMessage"] = ex.Message;
+                return RedirectToAction("AllProducts", "Seller");
             }
         }
         public IActionResult Orders()

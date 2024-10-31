@@ -49,13 +49,6 @@ public partial class BaseballBanditContext : DbContext
             entity
                 .HasNoKey()
                 .ToTable("Inventory");
-
-            entity.Property(e => e.ProductApparelSize).HasMaxLength(50);
-            entity.Property(e => e.ProductColor).HasMaxLength(50);
-            entity.Property(e => e.ProductId)
-                .ValueGeneratedOnAdd()
-                .HasColumnName("ProductID");
-            entity.Property(e => e.ProductType).HasMaxLength(50);
         });
 
         modelBuilder.Entity<OrderLog>(entity =>
