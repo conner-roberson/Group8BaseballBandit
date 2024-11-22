@@ -1,0 +1,34 @@
+﻿@using BaseballBandit.Classes
+@{
+    ViewData["Title"] = "Home Page";
+    var errorMessage = TempData["errorMessage"]?.ToString();
+    var successMessage = TempData["successMessage"]?.ToString();
+}
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Failed </strong>@errorMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <div class="alert alert-success">
+        <strong>Success </strong>@successMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+}
+<form asp-action="PaymentSelection" asp-controller="Home" method="post">
+    <select name="PaymentID">
+        @for(int i = 0; i < BaseballBandit.Classes.User.PaymentID.Count(); i++)
+        {
+            <option value="@BaseballBandit.Classes.User.PaymentID[i]">Card Ending in @(BaseballBandit.Classes.User.CardNumber[i] % 10000)</option>
+        }
+    </select>
+    <button type="submit" class="btn btn-primary">Select Payment Method</button>
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

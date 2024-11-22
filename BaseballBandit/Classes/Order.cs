@@ -15,6 +15,8 @@ namespace BaseballBandit.Classes
         public static List<DateTime> OrderDate { get; set; } = new List<DateTime>();
         public static List<bool> Refunded { get; set; } = new List<bool>();
 
+        public static List<int> PaymentID { get; set; } = new List<int>();
+
         public static void InitializeOrderLog (BaseballBanditContext context)
         {
             string sql = $"Select * From OrderLog WHERE UserID = {User.UserID}";
@@ -38,26 +40,28 @@ namespace BaseballBandit.Classes
             Total.Add(orders[num].Total);
             OrderDate.Add(orders[num].OrderDate);
             Refunded.Add(orders[num].Refunded);
+            PaymentID.Add(orders[num].PaymentID);
 
             return;
         }
-        public static bool FinalizeOrder(double SubTotal, BaseballBanditContext context)
+        public static bool FinalizeOrder(int PaymentId, BaseballBanditContext context)
         {
             try
             {
                 using (SqlConnection con = new SqlConnection("server=(localdb)\\localDB;database=BaseballBandit;Integrated Security=True; ConnectRetryCount=0; Encrypt=True; TrustServerCertificate=True"))
                 {
                     string updateQuery = @"
-                        Insert into OrderLog(UserID, ShippingAddress, Total, OrderDate, Refunded)
-	                    Values(@UserId, @ShippingAddress, @Total, @OrderDate, @Refunded)";
+                        Insert into OrderLog(UserID, ShippingAddress, Total, OrderDate, Refunded, PaymentID)
+	                    Values(@UserId, @ShippingAddress, @Total, @OrderDate, @Refunded, @PaymentID)";
 
                     using (SqlCommand cmd = new SqlCommand(updateQuery, con))
                     {
                         cmd.Parameters.AddWithValue("@UserId", User.UserID);
                         cmd.Parameters.AddWithValue("@ShippingAddress", User.Address + ", " + User.AddressCity + ", " + User.AddressState + ", " + User.AddressZip);
-                        cmd.Parameters.AddWithValue("@Total", SubTotal);
+                        cmd.Parameters.AddWithValue("@Total", CartClass.SubTotal);
                         cmd.Parameters.AddWithValue("@OrderDate", DateTime.Now);
                         cmd.Parameters.AddWithValue("@Refunded", false);
+                        cmd.Parameters.AddWithValue("@PaymentID", PaymentId);
 
                         con.Open();
                         cmd.ExecuteNonQuery();
@@ -71,7 +75,7 @@ namespace BaseballBandit.Classes
                 OrderNum.Add(userOrders[userOrders.Count() - 1].OrderNum);
                 UserId.Add(User.UserID);
                 shippingAddress.Add(User.Address + ", " + User.AddressCity + ", " + User.AddressState + ", " + User.AddressZip);
-                Total.Add(SubTotal);
+                Total.Add(CartClass.SubTotal);
                 OrderDate.Add(DateTime.Now);
                 Refunded.Add(false);
 

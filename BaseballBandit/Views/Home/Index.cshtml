@@ -37,9 +37,12 @@
                     <br />
                     @Model[i].ProductPrice
                 </div>
-                <div>
-                    <a class="btn btn-sm btn-primary" href="@Url.Action("AddToCart", "Home", new {ProductId = Model[i].ProductId})">Add To Cart</a>
-                </div>
+                    @if (BaseballBandit.Classes.User.Admin != true && BaseballBandit.Classes.User.Seller != true)
+                    {
+                        <div>
+                            <a class="btn btn-sm btn-primary" href="@Url.Action("AddToCart", "Home", new {ProductId = Model[i].ProductId})">Add To Cart</a>
+                        </div>
+                    }
                 <br />
                 <br />
             </div>
@@ -63,9 +66,12 @@
                         <br />
                         @Model[i + 1].ProductPrice
                     </div>
-                    <div>
-                        <a class="btn btn-sm btn-primary" href="@Url.Action("AddToCart", "Home", new {ProductId = Model[i + 1].ProductId})">Add To Cart</a>
-                    </div>
+                    @if(BaseballBandit.Classes.User.Admin != true && BaseballBandit.Classes.User.Seller != true)
+                    {
+                        <div>
+                            <a class="btn btn-sm btn-primary" href="@Url.Action("AddToCart", "Home", new {ProductId = Model[i + 1].ProductId})">Add To Cart</a>
+                        </div>
+                    }
                     <br />
                     <br />
                 </div>

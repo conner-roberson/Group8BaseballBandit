@@ -132,9 +132,31 @@ namespace BaseballBandit.Controllers
                 return RedirectToAction("Cart", "Home");
             }
         }
-        public IActionResult FinalizeOrder(double SubTotal)
+
+        [HttpGet]
+        public IActionResult PaymentSelection()
         {
-            bool success = Order.FinalizeOrder(SubTotal, _context);
+
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult PaymentSelection(int? PaymentID)
+        {
+            if (PaymentID != null)
+            {
+                return RedirectToAction("FinalizeOrder", new { PaymentID });
+            }
+            else 
+            {
+                TempData["errorMessage"] = "Payment Selection Failed";
+                return View();
+            }
+        }
+        
+        public IActionResult FinalizeOrder(int PaymentID)
+        {
+            bool success = Order.FinalizeOrder(PaymentID, _context);
             if (success)
             {
                 TempData["successMessage"] = "Order Placed Successfully";
@@ -177,11 +199,21 @@ namespace BaseballBandit.Controllers
             string sql = $"Exec OrderedProductsDetails {OrderNum}";
             var orderedProducts = _context.details.FromSqlRaw(sql).ToList();
 
+            int paymentID = 0;
+
             for(int i = 0; i < Order.OrderNum.Count; i++)
             {
                 if (Order.OrderNum[i] == OrderNum)
                 {
                     ViewBag.Index = i;
+                    paymentID = Order.PaymentID[i];
+                }
+            }
+            for(int i = 0; i < Classes.User.PaymentID.Count(); i++)
+            {
+                if(Classes.User.PaymentID[i] == paymentID)
+                {
+                    ViewBag.CardNumber = Classes.User.CardNumber[i] % 10000;
                 }
             }
 

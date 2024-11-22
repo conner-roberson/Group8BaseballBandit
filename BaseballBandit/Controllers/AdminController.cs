@@ -125,7 +125,7 @@ namespace BaseballBandit.Controllers
                     con.Close();
 
                     TempData["successMessage"] = "Edit Successful";
-                    return RedirectToAction("AllProducts", "Seller");
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
@@ -136,7 +136,7 @@ namespace BaseballBandit.Controllers
             catch (Exception ex)
             {
                 TempData["errorMessage"] = ex.Message;
-                return RedirectToAction("AllProducts", "Seller");
+                return RedirectToAction("Index", "Home");
             }
         }
         public IActionResult Orders()

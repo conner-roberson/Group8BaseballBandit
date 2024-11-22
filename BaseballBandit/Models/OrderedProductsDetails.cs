@@ -12,8 +12,6 @@
 
         public double ProductPrice { get; set; }
 
-        public int NumInStock { get; set; }
-
         public string ProductType { get; set; } = null!;
 
         public string ProductColor { get; set; } = null!;

@@ -16,4 +16,6 @@ public partial class OrderLog
     public DateTime OrderDate { get; set; }
 
     public bool Refunded { get; set; }
+
+    public int PaymentID { get; set; }
 }

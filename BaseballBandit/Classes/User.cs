@@ -33,6 +33,16 @@ namespace BaseballBandit.Classes
 
         public static int AddressZip;
 
+        public static List<long> CardNumber = new List<long>();
+
+        public static List<int> ExpirationMonth = new List<int>();
+
+        public static List<int> ExpirationYear = new List<int>();
+
+        public static List<int> CardCVC = new List<int>();
+
+        public static List<int> PaymentID = new List<int>();
+
         public static bool Login(string UserID, string Password, BaseballBanditContext context)
         {
             string sql = $"Exec LoginUser {UserID}";
@@ -60,8 +70,13 @@ namespace BaseballBandit.Classes
                 AddressState = check[0].AddressState;
                 AddressZip = check[0].AddressZip;
 
-                CartClass.InitializeCart(check[0].UserId, context);
+                
                 Order.InitializeOrderLog(context);
+                if(check[0].Admin == false && check[0].Seller == false)
+                {
+                    CartClass.InitializeCart(check[0].UserId, context);
+                    GetPaymentInfo(context);
+                }
 
                 return true;
                 
@@ -182,6 +197,20 @@ namespace BaseballBandit.Classes
             {
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 return false;
+            }
+        }
+        public static void GetPaymentInfo(BaseballBanditContext context)
+        {
+            string sql = $"Select * from PaymentInformation where UserID = {User.UserID}";
+            var payments = context.PaymentInfo.FromSqlRaw(sql).ToList();
+
+            for(int i = 0; i < payments.Count(); i++)
+            {
+                CardNumber.Add(payments[i].CardNumber);
+                ExpirationMonth.Add(payments[i].ExpirationMonth);
+                ExpirationYear.Add(payments[i].ExpirationYear);
+                CardCVC.Add(payments[i].CardCVC);
+                PaymentID.Add(payments[i].PaymentID);
             }
         }
     }

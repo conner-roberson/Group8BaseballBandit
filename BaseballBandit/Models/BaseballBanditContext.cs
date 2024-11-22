@@ -27,11 +27,17 @@ public partial class BaseballBanditContext : DbContext
 
     public virtual DbSet<OrderedProductsDetails> details { get; set; }
 
+    public virtual DbSet<PaymentInformation> PaymentInfo { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<PaymentInformation>(entity =>
+        {
+            entity.HasNoKey();
+        });
         modelBuilder.Entity<Cart>(entity =>
         {
             entity
