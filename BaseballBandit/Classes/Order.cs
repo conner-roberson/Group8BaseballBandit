@@ -78,8 +78,9 @@ namespace BaseballBandit.Classes
                 Total.Add(CartClass.SubTotal);
                 OrderDate.Add(DateTime.Now);
                 Refunded.Add(false);
+                PaymentID.Add(PaymentId);
 
-                if (OrderedProducts(context))
+                if (OrderedProducts(context, userOrders[userOrders.Count() - 1].OrderNum))
                 {
                     return true;
                 }
@@ -92,7 +93,7 @@ namespace BaseballBandit.Classes
             }
 
         }
-        public static bool OrderedProducts(BaseballBanditContext context)
+        public static bool OrderedProducts(BaseballBanditContext context, int orderNum)
         {
             try
             {
@@ -101,14 +102,16 @@ namespace BaseballBandit.Classes
                     using (SqlConnection con = new SqlConnection("server=(localdb)\\localDB;database=BaseballBandit;Integrated Security=True; ConnectRetryCount=0; Encrypt=True; TrustServerCertificate=True"))
                     {
                         string updateQuery = @"
-                        Insert into OrderedProducts(FkOrderNum, ProductNum, Quantity)
-	                    Values(@OrderNum, @ProductNum, @Quantity)";
+                        Insert into OrderedProducts(FkOrderNum, ProductNum, Quantity, SellerID, ProductPrice)
+	                    Values(@OrderNum, @ProductNum, @Quantity, @SellerID, @ProductPrice)";
 
                         using (SqlCommand cmd = new SqlCommand(updateQuery, con))
                         {
-                            cmd.Parameters.AddWithValue("@OrderNum", OrderNum.Last());
+                            cmd.Parameters.AddWithValue("@OrderNum", orderNum);
                             cmd.Parameters.AddWithValue("@ProductNum", CartClass.productIds[i]);
                             cmd.Parameters.AddWithValue("@Quantity", CartClass.Quantity[i]);
+                            cmd.Parameters.AddWithValue("@SellerID", CartClass.SellerID[i]);
+                            cmd.Parameters.AddWithValue("@ProductPrice", CartClass.productPrice[i]);
 
                             con.Open();
                             cmd.ExecuteNonQuery();
@@ -174,6 +177,18 @@ namespace BaseballBandit.Classes
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 return false;
             }
+        }
+
+        public static bool LogoutOrders()
+        {
+            OrderNum.Clear();
+            UserId.Clear();
+            shippingAddress.Clear();
+            Total.Clear();
+            OrderDate.Clear();
+            Refunded.Clear();
+            PaymentID.Clear();
+            return true;
         }
     }
 }

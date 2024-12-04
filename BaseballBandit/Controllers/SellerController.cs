@@ -171,5 +171,49 @@ namespace BaseballBandit.Controllers
                 return RedirectToAction("AllProducts", "Seller");
             }
         }
+
+        public IActionResult Sales()
+        {
+            string sql = $"Exec SoldProducts {Classes.User.UserID}";
+            var products = _context.details.FromSqlRaw(sql).ToList();
+
+            var groupedProducts = products
+                                .GroupBy(p => p.ProductId) 
+                                .Select(g => new
+                                {
+                                    ProductId = g.Key,
+                                    TotalQuantity = g.Sum(p => p.Quantity), 
+                                    ProductDetails = g.First() 
+                                })
+                                .ToList();
+
+            var result = groupedProducts.Select(g => new OrderedProductsDetails
+            {
+                ProductId = g.ProductId,
+                Quantity = g.TotalQuantity,
+                Name = g.ProductDetails.Name,
+                ProductPrice = g.ProductDetails.ProductPrice,
+                ProductType = g.ProductDetails.ProductType,
+                ProductColor = g.ProductDetails.ProductColor,
+                ImagePath = g.ProductDetails.ImagePath,
+                Brand = g.ProductDetails.Brand,
+                SellerId = g.ProductDetails.SellerId,
+                ProductEquipmentSize = g.ProductDetails.ProductEquipmentSize,
+                ProductApparelSize = g.ProductDetails.ProductApparelSize
+            }).ToList();
+            double revenue = 0;
+            int quantity = 0;
+
+            for(int i = 0; i < result.Count; i++)
+            {
+                revenue += (result[i].Quantity * result[i].ProductPrice);
+                quantity += (result[i].Quantity);
+            }
+
+            ViewBag.TotalRevenue = revenue;
+            ViewBag.TotalProductsSold = quantity;
+
+            return View(result);
+        }
     }
 }

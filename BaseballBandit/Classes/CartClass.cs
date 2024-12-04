@@ -10,6 +10,9 @@ namespace BaseballBandit.Classes
         public static int FkUserId { get; set; }
         public static double SubTotal { get; set; }
         public static int NumItems { get; set; } = 0;
+
+        public static List<int> SellerID { get; set; } = new List<int>();
+        public static List<double> productPrice { get; set; } = new List<double>();
         public static List<int> productIds { get; set; } = new List<int>();
         public static List<int> Quantity { get; set; } = new List<int>();
 
@@ -31,6 +34,8 @@ namespace BaseballBandit.Classes
                     {
                         productIds.Add(check[j].ProductId);
                         Quantity.Add(check[j].Quantity);
+                        SellerID.Add(inventory[i].SellerId);
+                        productPrice.Add(inventory[i].ProductPrice);
                         NumItems += Quantity[j];
                         SubTotal += inventory[i].ProductPrice;
                         j++;
@@ -47,14 +52,14 @@ namespace BaseballBandit.Classes
         public static bool AddToCart(int ProductId, BaseballBanditContext context)
         {
             string sql = $"Select * From Inventory Where ProductID = {ProductId}";
-            var ProductPrice = context.Inventories.FromSqlRaw(sql).ToList();
+            var Product = context.Inventories.FromSqlRaw(sql).ToList();
 
-            if (ProductPrice.Count == 0)
+            if (Product.Count == 0)
             {
                 return false;
             }
 
-            double productPriceValue = ProductPrice[0].ProductPrice;
+            double productPriceValue = Product[0].ProductPrice;
 
             bool alreadyInCart = false;
             bool success = false;
@@ -72,6 +77,8 @@ namespace BaseballBandit.Classes
             {
                 productIds.Add(ProductId);
                 Quantity.Add(1);
+                SellerID.Add(Product[0].SellerId);
+                productPrice.Add(Product[0].ProductPrice);
                 success = AddToDbCart(context);
             }
 
@@ -136,6 +143,7 @@ namespace BaseballBandit.Classes
                     success = RemoveFromDbCart(context, productIds[i]);
                     productIds.RemoveAt(i);
                     Quantity.RemoveAt(i);
+                    SellerID.RemoveAt(i);
                     break;
                 }
             }
@@ -257,6 +265,8 @@ namespace BaseballBandit.Classes
                 NumItems = 0;
                 productIds.Clear();
                 Quantity.Clear();
+                productPrice.Clear();
+                SellerID.Clear();
 
                 return true;
             }
@@ -265,6 +275,16 @@ namespace BaseballBandit.Classes
                 Console.WriteLine($"An error occurred: {ex.Message}");
                 return false;
             }
+        }
+        public static bool LogoutCart()
+        {
+            SubTotal = 0;
+            NumItems = 0;
+            productIds.Clear();
+            Quantity.Clear();
+            productPrice.Clear();
+            SellerID.Clear();
+            return true;
         }
     }
 }

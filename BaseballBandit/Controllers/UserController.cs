@@ -57,5 +57,13 @@ namespace BaseballBandit.Controllers
                 return View();
             }
         }
+
+        public IActionResult Logout()
+        {
+            CartClass.LogoutCart();
+            Order.LogoutOrders();
+            Classes.User.LogoutUser();
+            return RedirectToAction("Login", "User");
+        }
     }
 }

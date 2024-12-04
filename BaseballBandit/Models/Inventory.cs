@@ -23,5 +23,5 @@ public partial class Inventory
 
     public string? Brand { get; set; }
 
-    public int? SellerId { get; set; }
+    public int SellerId { get; set; }
 }

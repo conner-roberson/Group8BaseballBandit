@@ -1,0 +1,55 @@
+﻿@model List<BaseballBandit.Models.OrderedProductsDetails>
+@using BaseballBandit.Classes
+@{
+}
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Product Image
+            </th>
+            <th>
+                Brand
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Unit Price
+            </th>
+            <th>
+                Number Sold
+            </th>
+            <th>
+                Revenue Per Item
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(int i = 0; i < Model.Count(); i++)
+        {
+            <tr>
+                <td>
+                    <img src="/images/@Model[i].ImagePath" width="100" height="100" />
+                </td>
+                <td>
+                    @Model[i].Brand
+                </td>
+                <td>
+                    @Model[i].Name
+                </td>
+                <td>
+                    @Model[i].ProductPrice
+                </td>
+                <td>
+                    @Model[i].Quantity
+                </td>
+                <td>
+                    @(Model[i].ProductPrice * Model[i].Quantity)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<h3>Total Revenue = $@ViewBag.TotalRevenue</h3>
+<h3>Number of Products Sold = @ViewBag.TotalProductsSold</h3>

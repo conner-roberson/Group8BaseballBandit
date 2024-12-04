@@ -5,12 +5,13 @@ using System.Diagnostics;
 using BaseballBandit.Classes;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Data.SqlClient;
 
 namespace BaseballBandit.Controllers
 {
     public class HomeController : Controller
     {
-        
+
         private readonly BaseballBanditContext _context;
 
         public HomeController(BaseballBanditContext context)
@@ -20,7 +21,7 @@ namespace BaseballBandit.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if(Classes.User.UserName == null)
+            if (Classes.User.UserName == null)
             {
                 TempData["errorMessage"] = "You must login first";
                 return RedirectToAction("Login", "User");
@@ -147,13 +148,13 @@ namespace BaseballBandit.Controllers
             {
                 return RedirectToAction("FinalizeOrder", new { PaymentID });
             }
-            else 
+            else
             {
                 TempData["errorMessage"] = "Payment Selection Failed";
                 return View();
             }
         }
-        
+
         public IActionResult FinalizeOrder(int PaymentID)
         {
             bool success = Order.FinalizeOrder(PaymentID, _context);
@@ -201,23 +202,70 @@ namespace BaseballBandit.Controllers
 
             int paymentID = 0;
 
-            for(int i = 0; i < Order.OrderNum.Count; i++)
+            for (int i = 0; i < Order.OrderNum.Count; i++)
             {
                 if (Order.OrderNum[i] == OrderNum)
                 {
                     ViewBag.Index = i;
                     paymentID = Order.PaymentID[i];
+                    break;
                 }
             }
-            for(int i = 0; i < Classes.User.PaymentID.Count(); i++)
+            for (int i = 0; i < Classes.User.PaymentID.Count(); i++)
             {
-                if(Classes.User.PaymentID[i] == paymentID)
+                if (Classes.User.PaymentID[i] == paymentID)
                 {
                     ViewBag.CardNumber = Classes.User.CardNumber[i] % 10000;
                 }
             }
 
             return View(orderedProducts);
+        }
+        [HttpGet]
+        public IActionResult AddPayment()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult AddPayment([Bind] PaymentInformation data)
+        {
+            try
+            {
+                using (SqlConnection con = new SqlConnection("server=(localdb)\\localDB;database=BaseballBandit;Integrated Security=True; ConnectRetryCount=0; Encrypt=True; TrustServerCertificate=True"))
+                {
+                    string updateQuery = @"
+                        Insert into PaymentInformation(UserID, CardNumber, ExpirationMonth, ExpirationYear, CardCVC)
+	                    Values(@UserID, @CardNumber, @ExpirationMonth, @ExpirationYear, @CardCVC)";
+
+                    using (SqlCommand cmd = new SqlCommand(updateQuery, con))
+                    {
+                        cmd.Parameters.AddWithValue("@UserId", Classes.User.UserID);
+                        cmd.Parameters.AddWithValue("@CardNum", data.CardNumber);
+                        cmd.Parameters.AddWithValue("@ExpirationMonth", data.ExpirationMonth);
+                        cmd.Parameters.AddWithValue("@ExpirationYear", data.ExpirationYear);
+                        cmd.Parameters.AddWithValue("@CardCVC", data.CardCVC);
+
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                        con.Close();
+                    }
+                }
+                if(Classes.User.AddPayment(data.CardNumber, data.ExpirationMonth, data.ExpirationYear, data.CardCVC))
+                {
+                    return RedirectToAction("PaymentSelection", "Home");
+                }
+                else
+                {
+                    TempData["errorMessage"] = "Payment Failed To Be Added";
+                    return View();
+                }
+            }
+            catch (Exception ex)
+            {
+                TempData["errorMessage"] = "Payment Failed To Be Added";
+                Console.WriteLine($"An error occurred: {ex.Message}");
+                return View();
+            }
         }
         public IActionResult Privacy()
         {

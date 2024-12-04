@@ -213,5 +213,35 @@ namespace BaseballBandit.Classes
                 PaymentID.Add(payments[i].PaymentID);
             }
         }
+        public static bool LogoutUser()
+        {
+            UserName = null;
+            UserID = 0;
+            Email = null;
+            FirstName = null;
+            LastName = null;
+            Admin = false;
+            Seller = false;
+            Address = null;
+            AddressCity = null;
+            AddressState = null;
+            AddressZip = 0;
+            CardNumber.Clear();
+            ExpirationMonth.Clear();
+            ExpirationYear.Clear();
+            CardCVC.Clear();
+            PaymentID.Clear();
+            return true;
+        }
+
+        public static bool AddPayment(long CardNum, int ExpirationMon, int ExpirationYr, int CVC)
+        {
+            CardNumber.Add(CardNum);
+            ExpirationMonth.Add(ExpirationMon);
+            ExpirationYear.Add(ExpirationYr);
+            CardCVC.Add(CVC);
+            PaymentID.Add(0);
+            return true;
+        }
     }
 }

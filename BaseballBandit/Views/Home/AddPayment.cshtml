@@ -1,0 +1,68 @@
+﻿@model BaseballBandit.Models.PaymentInformation
+@{
+    var errorMessage = TempData["errorMessage"]?.ToString();
+    var successMessage = TempData["successMessage"]?.ToString();
+}
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <div class="alert alert-danger">
+        <strong>Failed </strong>@errorMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+}
+@if (!string.IsNullOrWhiteSpace(successMessage))
+{
+    <div class="alert alert-success">
+        <strong>Success </strong>@successMessage
+        <button type="button" class="btn-close float-end" data-bs-dismiss="alert"></button>
+    </div>
+}
+<div style="text-align:center"><h1 class="mb-3">Add Payment</h1></div>
+<form asp-action="AddPayment" asp-controller="Home" method="post">
+    <div class="mb-3">
+        <label class="form-label">
+            Card Number: 
+        </label>
+        <input type="text" class="form-control" asp-for="CardNumber" />
+        <span asp-validation-for="CardNumber" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Expiration Month:
+        </label>
+        <select asp-for="ExpirationMonth" class="form-control">
+            @for (int i = 1; i < 13; i++)
+            {
+                <option value="@i">@i</option>
+            }
+        </select>
+        <span asp-validation-for="ExpirationMonth" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            Expiration Year:
+        </label>
+        <select asp-for="ExpirationYear" class="form-control">
+            @for (int i = 2024; i < 2035; i++)
+            {
+                <option value="@i">@i</option>
+            }
+        </select>
+        <span asp-validation-for="ExpirationYear" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">
+            CVC: 
+        </label>
+        <input type="password" class="form-control" asp-for="CardCVC" />
+        <span asp-validation-for="CardCVC" class="text-danger"></span>
+    </div>
+    <div class="d-grid">
+        <button type="submit" class="btn btn-primary">Add Payment</button>
+    </div>
+</form>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
